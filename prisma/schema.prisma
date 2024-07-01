@@ -14,18 +14,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
-}
-
 // Necessary for Next auth
 model Account {
     id                       String  @id @default(cuid())
@@ -34,11 +22,11 @@ model Account {
     provider                 String
     providerAccountId        String
     refresh_token            String? @db.Text
-    access_token             String? // @db.Text
+    access_token             String? @db.Text
     expires_at               Int?
     token_type               String?
     scope                    String?
-    id_token                 String? // @db.Text
+    id_token                 String? @db.Text
     session_state            String?
     user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
     refresh_token_expires_in Int?
@@ -56,13 +44,17 @@ model Session {
 
 model User {
     id            String    @id @default(cuid())
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+    
     name          String?
     email         String?   @unique
     emailVerified DateTime?
+    password      String
     image         String?
     accounts      Account[]
     sessions      Session[]
-    posts         Post[]
+    workouts      Workout[]
 }
 
 model VerificationToken {
@@ -71,4 +63,54 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Workout {
+  id          String         @id @default(cuid())
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  name        String
+  description String?
+  exercises   Exercise[]
+
+  user        User           @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model Exercise {
+  id          String         @id @default(cuid())
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  name        String
+  sets        Set[]
+  logs        ExerciseLog[]
+
+  workout     Workout        @relation(fields: [workoutId], references: [id])
+  workoutId   String
+}
+
+model Set {
+  id          String         @id @default(cuid())
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  reps        Int
+  weight      Float
+
+  exercise    Exercise       @relation(fields: [exerciseId], references: [id])
+  exerciseId  String
+}
+
+model ExerciseLog {
+  id          String         @id @default(cuid())
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  date        DateTime
+  notes       String?
+
+  exercise    Exercise       @relation(fields: [exerciseId], references: [id])
+  exerciseId  String
 }
