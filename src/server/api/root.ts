@@ -1,5 +1,5 @@
-import { postRouter } from "~/server/api/routers/post";
-import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
+import { workoutRouter, exerciseRouter, setRouter, exerciseLogRouter } from '~/server/api/routers';
+import { createCallerFactory, createTRPCRouter } from '~/server/api/trpc';
 
 /**
  * This is the primary router for your server.
@@ -7,7 +7,10 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  post: postRouter,
+  workout: workoutRouter,
+  exercise: exerciseRouter,
+  set: setRouter,
+  exerciseLog: exerciseLogRouter,
 });
 
 // export type definition of API

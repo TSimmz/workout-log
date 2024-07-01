@@ -54,7 +54,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    workouts      Workout[]
+    //workouts      Workout[]
 }
 
 model VerificationToken {
@@ -74,8 +74,8 @@ model Workout {
   description String?
   exercises   Exercise[]
 
-  user        User           @relation(fields: [userId], references: [id])
-  userId      String
+  //user        User           @relation(fields: [userId], references: [id])
+  //userId      String
 }
 
 model Exercise {
@@ -86,7 +86,7 @@ model Exercise {
   name        String
   sets        Set[]
   logs        ExerciseLog[]
-
+  
   workout     Workout        @relation(fields: [workoutId], references: [id])
   workoutId   String
 }
@@ -98,6 +98,7 @@ model Set {
   
   reps        Int
   weight      Float
+  units       String
 
   exercise    Exercise       @relation(fields: [exerciseId], references: [id])
   exerciseId  String
